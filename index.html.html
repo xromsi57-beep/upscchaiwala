@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC Chaiwala - Cafe Menu & Order</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #D4AF37;        /* Luxury Gold */
+            --secondary: #FFF8DC;      /* Cream Light */
+            --accent: #1A1A1A;         /* Rich Dark Charcoal */
+            --bg-color: #121212;       /* Sleek Dark Mode Background */
+            --card-bg: #1E1E1E;        /* Card Background */
+            --text-light: #F5F5F5;     /* Light Text */
+            --text-muted: #B0B0B0;     /* Muted Text */
+            --shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-light);
+            padding-bottom: 140px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #000000, #2C2C2C);
+            color: var(--white);
+            text-align: center;
+            padding: 25px 15px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        header h1 {
+            font-size: 32px;
+            letter-spacing: 1.5px;
+            color: var(--primary);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 0;
+        }
+
+        .contact-banner {
+            background: linear-gradient(90deg, #D4AF37, #AA7C11);
+            color: #000000;
+            text-align: center;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .contact-banner a {
+            color: #000000;
+            text-decoration: underline;
+        }
+
+        /* Category Filter Tabs */
+        .category-nav {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 15px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            white-space: nowrap;
+            position: sticky;
+            top: 89px;
+            z-index: 999;
+            border-bottom: 1px solid #333;
+        }
+
+        .category-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-tab {
+            background: #2C2C2C;
+            color: var(--text-light);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid #444;
+            transition: all 0.3s ease;
+        }
+
+        .cat-tab.active, .cat-tab:hover {
+            background: var(--primary);
+            color: #000000;
+            border-color: var(--primary);
+            transform: scale(1.05);
+            font-weight: 700;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .category-section {
+            margin-bottom: 35px;
+        }
+
+        .category-title {
+            font-size: 22px;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+            padding-left: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #333;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.2);
+            border-color: var(--primary);
+        }
+
+        .item-img-container {
+            width: 100%;
+            height: 160px;
+            overflow: hidden;
+            background: #2a2a2a;
+            position: relative;
+        }
+
+        .item-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .menu-card:hover .item-img-container img {
+            transform: scale(1.1);
+        }
+
+        .item-details {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .item-info h3 {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .item-price {
+            font-size: 16px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: auto;
+        }
+
+        .size-select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            font-size: 12px;
+            outline: none;
+            flex: 1;
+            background: #2A2A2A;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .add-btn {
+            background-color: var(--primary);
+            color: #000000;
+            border: none;
+            padding: 9px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .add-btn:active {
+            transform: scale(0.95);
+        }
+
+        .add-btn:hover {
+            background-color: #FFF8DC;
+        }
+
+        /* Fixed Cart Bar with Item Management */
+        .cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1A1A1A;
+            color: var(--text-light);
+            padding: 12px 20px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.6);
+            z-index: 1001;
+            border-top: 2px solid var(--primary);
+            animation: slideUp 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .cart-items-preview {
+            max-height: 100px;
+            overflow-y: auto;
+            border-bottom: 1px solid #333;
+            padding-bottom: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .cart-mini-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            background: #252525;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        .mini-controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mini-qty-btn {
+            background: #444;
+            color: #fff;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .mini-qty-btn:hover {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .mini-del-btn {
+            background: none;
+            border: none;
+            color: #ff5252;
+            cursor: pointer;
+            font-size: 13px;
+            margin-left: 4px;
+        }
+
+        .cart-footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-info {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        .checkout-btn {
+            background-color: #25D366;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, transform 0.2s;
+        }
+
+        .checkout-btn:hover {
+            background-color: #20ba5a;
+            transform: scale(1.03);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.75);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            color: var(--text-light);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 25px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--primary);
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .close-btn:hover {
+            color: var(--text-light);
+        }
+
+        /* Payment Section Styling inside Modal */
+        .payment-box {
+            background: #252525;
+            border: 1px dashed var(--primary);
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .payment-box h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .qr-code-img {
+            width: 180px;
+            height: 180px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #fff;
+            padding: 5px;
+            margin: 8px auto;
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--primary);
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            background: #2A2A2A;
+            color: var(--text-light);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: var(--primary);
+        }
+
+        .location-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 9px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 8px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+
+        .location-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .submit-order-btn {
+            background-color: #25D366;
+            color: white;
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .submit-order-btn:hover {
+            background-color: #20ba5a;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>UPSC चाय वाला</h1>
+    </header>
+
+    <div class="contact-banner">
+        📞 Order Helpline / Contact: <a href="tel:7014194339">+91 70141 94339</a>
+    </div>
+
+    <!-- Category Navigation Tabs -->
+    <div class="category-nav" id="categoryNav">
+        <!-- Generated via script -->
+    </div>
+
+    <div class="container" id="menu-container">
+        <!-- Dynamic Menu Generated via Script -->
+    </div>
+
+    <!-- Cart Bar with Direct Add/Remove/Plus/Minus controls -->
+    <div class="cart-bar" id="cartBar" style="display: none;">
+        <div class="cart-items-preview" id="cartItemsPreview">
+            <!-- Dynamic Cart Items list with +/- and Delete buttons -->
+        </div>
+        <div class="cart-footer-row">
+            <div class="cart-info" id="cartSummaryText">0 Items | ₹0</div>
+            <button class="checkout-btn" onclick="openCheckoutModal()">
+                <i class="fab fa-whatsapp"></i> Pay & Order on WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="checkoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Payment & Order Details</h3>
+                <button class="close-btn" onclick="closeCheckoutModal()">×</button>
+            </div>
+
+            <!-- Payment QR Code Section -->
+            <div class="payment-box">
+                <h4>Scan & Pay via PhonePe / UPI</h4>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 5px;">Total Payable Amount scan karke pay karein</p>
+                
+                <!-- Aapki di gayi location ka path yahan set kar diya gaya hai -->
+                <img src="C:\Users\abhishek\Desktop\WhatsApp Image 2026-09-03 at 10.25.32 PM.jpeg" alt="UPSC Chaiwala QR Code" class="qr-code-img">
+            </div>
+
+            <div class="form-group">
+                <label>Aapka Naam (Your Name) *</label>
+                <input type="text" id="customerName" placeholder="Apna naam likhiye">
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number (Phone Number) *</label>
+                <input type="tel" id="customerPhone" placeholder="Apna 10-digit mobile number likhiye">
+            </div>
+
+            <div class="form-group">
+                <label>Payment Transaction ID / UTR Number *</label>
+                <input type="text" id="paymentRef" placeholder="UPI Ref / Transaction ID daalein">
+            </div>
+
+            <div class="form-group">
+                <label>Payment Screenshot (Optional)</label>
+                <input type="file" accept="image/*" id="paymentProofInput" style="padding: 8px; font-size: 12px;">
+                <p style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Payment receipt ka screenshot bhi select kar sakte hain.</p>
+            </div>
+
+            <div class="form-group">
+                <label>Table Number ya Address (Ghar ke liye)</label>
+                <textarea id="customerAddress" rows="2" placeholder="Jaise: Table No. 4 ya Apna Pura Pata"></textarea>
+                <button class="location-btn" onclick="getLocation()"><i class="fas fa-map-marker-alt"></i> Share Live Location</button>
+                <span id="locStatus" style="font-size: 12px; color: #4CAF50; margin-left: 8px; font-weight: 600;"></span>
+            </div>
+
+            <button class="submit-order-btn" onclick="sendWhatsAppOrder()">Submit Payment Proof & Order 🚀</button>
+        </div>
+    </div>
+
+    <script>
+        const cafePhone = "917014194339"; 
+
+        const menuData = {
+            "Chai (Tea)": [
+                {name: "Chai", price: 10, img: "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=500&auto=format&fit=crop&q=60"},
+                {name: "Kanch Kulhad Chai", price: 15, img: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=500&auto=format&fit=crop&q=60"},
+                {name: "Mittri Kulhad Chai", price: 20, img: "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=500&auto=format&fit=crop&q=60"},
+                {name: "Lemon Tea", price: 20, img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500&auto=format&fit=crop&q=60"}
+            ],
+            "Coffee": [
+                {name: "Hot Coffee", price: 25, img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&auto=format&fit=crop&q=60"},
+                {name: "Cold Coffee (Small)", price: 50, img: "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=500&auto=format&fit=crop&q=60"},
+                {name: "Cold Coffee (Medium)", price: 70, img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=500&auto=format&fit=crop&q=60"},
+                {name: "Cold Coffee (Large)", price: 90, img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500&auto=format&fit=crop&q=60"}
+            ],
+            "Juice": [
+                {name: "Papaya Juice", sizes: {"Small": 40, "Medium": 50, "Large": 60}, img: "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500&auto=format&fit=crop&q=60"},
+                {name: "Mango Juice", sizes: {"Small": 40, "Medium": 50, "Large": 60}, img: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=500&auto=format&fit=crop&q=60"},
+                {name: "Banana Juice", sizes: {"Small": 40, "Medium": 50, "Large": 60}, img: "https://images.unsplash.com/photo-1621506289937-a8e4df240d0b?w=500&auto=format&fit=crop&q=60"},
+                {name: "Pineapple Juice", sizes: {"Small": 30, "Medium": 40, "Large": 50}, img: "https://images.unsplash.com/photo-1589734543486-50893080e461?w=500&auto=format&fit=crop&q=60"},
+                {name: "Mix Juice", sizes: {"Small": 50, "Medium": 60, "Large": 70}, img: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=500&auto=format&fit=crop&q=60"}
+            ],
+            "Shake": [
+                {name: "Papaya Shake", sizes: {"Small": 60, "Medium": 70, "Large": 80}, img: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=500&auto=format&fit=crop&q=60"},
+                {name: "Mango Shake", sizes: {"Small": 60, "Medium": 70, "Large": 80}, img: "https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=500&auto=format&fit=crop&q=60"},
+                {name: "Banana Shake", sizes: {"Small": 60, "Medium": 70, "Large": 80}, img: "https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=500&auto=format&fit=crop&q=60"},
+                {name: "Mix Shake", sizes: {"Small": 70, "Medium": 80, "Large": 90}, img: "https://images.unsplash.com/photo-1577805947697-89e18249d767?w=500&auto=format&fit=crop&q=60"}
+            ],
+            "Burger & Meggie": [
+                {name: "Burger", price: 50, img: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&auto=format&fit=crop&q=60"},
+                {name: "Cheese Burger", price: 70, img: "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=500&auto=format&fit=crop&q=60"},
+                {name: "Paneer Burger", price: 70, img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&auto=format&fit=crop&q=60"},
+                {name: "Simple Meggie", price: 30, img: "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=500&auto=format&fit=crop&q=60"},
+                {name: "Veg Meggie", price: 50, img: "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=500&auto=format&fit=crop&q=60"},
+                {name: "Cheese Meggie", price: 60, img: "https://images.unsplash.com/photo-1585032226651-759b368d7246?w=500&auto=format&fit=crop&q=60"},
+                {name: "Paneer Meggie", price: 70, img: "https://images.unsplash.com/photo-1612929633738-8fe44f7ec841?w=500&auto=format&fit=crop&q=60"},
+                {name: "Special Meggie", price: 80, img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500&auto=format&fit=crop&q=60"}
+            ],
+            "Paties & Sandwich": [
+                {name: "Simple Paties", price: 20, img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&auto=format&fit=crop&q=60"},
+                {name: "Masala Paties", price: 30, img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&auto=format&fit=crop&q=60"},
+                {name: "Paneer Paties", price: 50, img: "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=500&auto=format&fit=crop&q=60"},
+                {name: "Grill Sandwich", price: 50, img: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=500&auto=format&fit=crop&q=60"},
+                {name: "Cheese Sandwich", price: 70, img: "https://images.unsplash.com/photo-1553909489-cd47e0907980?w=500&auto=format&fit=crop&q=60"},
+                {name: "Paneer Sandwich", price: 70, img: "https://images.unsplash.com/photo-1539252554453-80ab65ce3586?w=500&auto=format&fit=crop&q=60"}
+            ],
+            "Pizza": [
+                {name: "Onion Pizza", price: 110, img: "https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?w=500&auto=format&fit=crop&q=60"},
+                {name: "Corn Pizza", price: 130, img: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500&auto=format&fit=crop&q=60"},
+                {name: "Capsicam Pizza", price: 130, img: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=500&auto=format&fit=crop&q=60"},
+                {name: "Paneer Pizza", price: 150, img: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=500&auto=format&fit=crop&q=60"},
+                {name: "Special Pizza", price: 170, img: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=500&auto=format&fit=crop&q=60"}
+            ],
+            "Pasta & Fries": [
+                {name: "Suji Pasta (Half)", price: 50, img: "https://images.unsplash.com/photo-1621996346565-e3d5d6281298?w=500&auto=format&fit=crop&q=60"},
+                {name: "Suji Pasta (Full)", price: 90, img: "https://images.unsplash.com/photo-1621996346565-e3d5d6281298?w=500&auto=format&fit=crop&q=60"},
+                {name: "Meda Pasta (Half)", price: 40, img: "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&auto=format&fit=crop&q=60"},
+                {name: "Meda Pasta (Full)", price: 80, img: "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=500&auto=format&fit=crop&q=60"},
+                {name: "French Fries (Half)", price: 40, img: "https://images.unsplash.com/photo-1576107232684-1279f3908591?w=500&auto=format&fit=crop&q=60"},
+                {name: "French Fries (Full)", price: 70, img: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500&auto=format&fit=crop&q=60"}
+            ]
+        };
+
+        let cart = [];
+        let userLocationCoords = "";
+
+        function renderMenu() {
+            const container = document.getElementById('menu-container');
+            const navContainer = document.getElementById('categoryNav');
+            let html = '';
+            let navHtml = '';
+
+            let first = true;
+            for (let category in menuData) {
+                let catId = category.replace(/[^a-zA-Z]/g, '');
+                navHtml += `<button class="cat-tab ${first ? 'active' : ''}" onclick="scrollToCat('${catId}', this)">${category}</button>`;
+                first = false;
+
+                html += `<div class="category-section" id="cat_${catId}">`;
+                html += `<div class="category-title">${category}</div>`;
+                html += `<div class="menu-grid">`;
+
+                menuData[category].forEach((item, index) => {
+                    let priceDisplay = '';
+                    let sizeSelectHtml = '';
+
+                    if (item.sizes) {
+                        let firstSize = Object.keys(item.sizes)[0];
+                        priceDisplay = `₹<span id="price_${catId}_${index}">${item.sizes[firstSize]}</span>`;
+                        sizeSelectHtml = `<select class="size-select" id="size_${catId}_${index}" onchange="updatePrice('${category}', ${index}, '${catId}')">`;
+                        for (let size in item.sizes) {
+                            sizeSelectHtml += `<option value="${size}">${size} (₹${item.sizes[size]})</option>`;
+                        }
+                        sizeSelectHtml += `</select>`;
+                    } else {
+                        priceDisplay = `₹${item.price}`;
+                    }
+
+                    html += `
+                        <div class="menu-card">
+                            <div class="item-img-container">
+                                <img src="${item.img}" alt="${item.name}" loading="lazy">
+                            </div>
+                            <div class="item-details">
+                                <div class="item-info">
+                                    <h3>${item.name}</h3>
+                                    <div class="item-price" id="display_price_${catId}_${index}">${priceDisplay}</div>
+                                </div>
+                                <div class="item-actions">
+                                    ${sizeSelectHtml}
+                                    <button class="add-btn" onclick="addToCart('${category}', ${index}, '${catId}')">Add +</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`;
+            }
+            navContainer.innerHTML = navHtml;
+            container.innerHTML = html;
+        }
+
+        function scrollToCat(catId, btn) {
+            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            const element = document.getElementById(`cat_${catId}`);
+            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updatePrice(category, index, catId) {
+            const item = menuData[category][index];
+            const select = document.getElementById(`size_${catId}_${index}`);
+            const selectedSize = select.value;
+            const priceDisplay = document.getElementById(`display_price_${catId}_${index}`);
+            priceDisplay.innerHTML = `₹${item.sizes[selectedSize]}`;
+        }
+
+        function addToCart(category, index, catId) {
+            const item = menuData[category][index];
+            let name = item.name;
+            let price = item.price;
+            let size = '';
+
+            if (item.sizes) {
+                const select = document.getElementById(`size_${catId}_${index}`);
+                size = select.value;
+                price = item.sizes[size];
+                name += ` (${size})`;
+            }
+
+            const existing = cart.find(cartItem => cartItem.name === name);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ name, price, qty: 1 });
+            }
+            updateCartUI();
+        }
+
+        function changeQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            updateCartUI();
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartBar = document.getElementById('cartBar');
+            const cartSummaryText = document.getElementById('cartSummaryText');
+            const cartItemsPreview = document.getElementById('cartItemsPreview');
+
+            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            let totalPrice = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            if (totalItems > 0) {
+                cartBar.style.display = 'flex';
+                cartSummaryText.innerText = `${totalItems} Items | Total: ₹${totalPrice}`;
+                
+                let previewHtml = '';
+                cart.forEach((item, index) => {
+                    previewHtml += `
+                        <div class="cart-mini-row">
+                            <span><b>${item.name}</b> (₹${item.price * item.qty})</span>
+                            <div class="mini-controls">
+                                <button class="mini-qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                                <span style="font-size: 12px; font-weight: bold;">${item.qty}</span>
+                                <button class="mini-qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                                <button class="mini-del-btn" onclick="removeFromCart(${index})" title="Remove"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+                cartItemsPreview.innerHTML = previewHtml;
+            } else {
+                cartBar.style.display = 'none';
+                closeCheckoutModal();
+            }
+        }
+
+        function openCheckoutModal() {
+            if (cart.length === 0) return;
+            document.getElementById('checkoutModal').style.display = 'flex';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').style.display = 'none';
+        }
+
+        function getLocation() {
+            const status = document.getElementById('locStatus');
+            if (!navigator.geolocation) {
+                status.innerText = "Geolocation supported nahi hai";
+                return;
+            }
+            status.innerText = "Fetching location...";
+            navigator.geolocation.getCurrentPosition((position) => {
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+                userLocationCoords = `https://maps.google.com/?q=${lat},${lon}`;
+                status.innerText = "Location added successfully! ✅";
+            }, () => {
+                status.innerText = "Location fetch nahi ho payi";
+            });
+        }
+
+        function sendWhatsAppOrder() {
+            const name = document.getElementById('customerName').value.trim();
+            const phone = document.getElementById('customerPhone').value.trim();
+            const paymentRef = document.getElementById('paymentRef').value.trim();
+            const address = document.getElementById('customerAddress').value.trim();
+            const proofInput = document.getElementById('paymentProofInput');
+
+            if (!name) {
+                alert("Kripya apna naam darj karein!");
+                return;
+            }
+            if (!phone) {
+                alert("Kripya apna mobile number darj karein!");
+                return;
+            }
+            if (!paymentRef) {
+                alert("Kripya payment karne ke baad Transaction ID / UTR Number darj karein!");
+                return;
+            }
+
+            let orderText = `*Paid Order - UPSC Chaiwala*%0A%0A`;
+            orderText += `👤 *Name:* ${name}%0A`;
+            orderText += `📱 *Phone Number:* ${phone}%0A`;
+            orderText += `💳 *Transaction ID/UTR:* ${paymentRef}%0A`;
+            if (proofInput.files && proofInput.files[0]) {
+                orderText += `🖼️ *Payment Screenshot:* [Attached/Selected by Customer]%0A`;
+            }
+            orderText += `📍 *Address/Table:* ${address || 'Not Provided'}%0A`;
+            if (userLocationCoords) {
+                orderText += `🗺️ *Location Map:* ${userLocationCoords}%0A`;
+            }
+            orderText += `%0A🛍️ *Order Items:*%0A`;
+
+            let grandTotal = 0;
+            cart.forEach(item => {
+                let itemTotal = item.price * item.qty;
+                grandTotal += itemTotal;
+                orderText += `- ${item.name} x ${item.qty} = ₹${itemTotal}%0A`;
+            });
+
+            orderText += `%0A💰 *Grand Total Paid:* *₹${grandTotal}*`;
+
+            const whatsappUrl = `https://wa.me/${cafePhone}?text=${orderText}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        window.onload = renderMenu;
+    </script>
+</body>
+</html>
